@@ -18,6 +18,15 @@ package com.google.codelab.sdclibrary
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
+import ca.uhn.fhir.context.FhirContext
+import com.google.android.fhir.datacapture.QuestionnaireFragment
+import kotlinx.coroutines.launch
+import org.hl7.fhir.r4.model.Enumerations
+import org.hl7.fhir.r4.model.Patient
+import org.hl7.fhir.r4.model.Person
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +36,42 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    // 4.2 Replace with code from the codelab to add a questionnaire fragment.
+    questionnaireJsonString = getStringFromAssets("dataToQuestionnaire.json")
+
+    // Initialize Patient
+    val person = Person()
+    person.addName().setFamily("Simpson").addGiven("James")
+
+    // Convert patient to Map<String, String>
+    val ctx = FhirContext.forR4()
+    val parser = ctx.newJsonParser()
+    val launchContextMap = mapOf("person" to parser.encodeResourceToString(person)) as Map<String, String>
+
+
+    // Pass questionnaire anf patient to QuestionnaireFragment
+    // serializing FHI Resources: https://hapifhir.io/hapi-fhir/docs/model/parsers.html
+    val questionnaireFragment =
+      QuestionnaireFragment
+        .builder()
+        .setQuestionnaireLaunchContextMap(launchContextMap)
+        .setQuestionnaire(questionnaireJsonString!!)
+        .build()
+
+    // Step 3: Add the QuestionnaireFragment to the FragmentContainerView
+    if (savedInstanceState == null) {
+      supportFragmentManager.commit {
+        setReorderingAllowed(true)
+        add(R.id.fragment_container_view, questionnaireFragment)
+      }
+    }
+
+    // Submit button callback
+    supportFragmentManager.setFragmentResultListener(
+      QuestionnaireFragment.SUBMIT_REQUEST_KEY,
+      this,
+    ) { _, _ ->
+      submitQuestionnaire()
+    }
   }
 
   private fun submitQuestionnaire() =

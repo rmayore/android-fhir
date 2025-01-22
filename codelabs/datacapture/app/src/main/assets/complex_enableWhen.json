@@ -1,0 +1,141 @@
+{
+  "resourceType": "Questionnaire",
+  "status": "draft",
+  "item": [
+    {
+      "linkId": "6",
+      "type": "group",
+      "text": "Complex EnableWhen Conditions",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "coding": [
+              {
+                "system": "http://hl7.org/fhir/questionnaire-item-control",
+                "code": "page",
+                "display": "Page"
+              }
+            ],
+            "text": "Page 6"
+          }
+        }
+      ],
+      "item": [
+        {
+          "linkId": "6.1",
+          "text": "What states has patient been to?",
+          "type": "choice",
+          "repeats": true,
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+              "valueCodeableConcept": {
+                "coding": [
+                  {
+                    "system": "http://hl7.org/fhir/questionnaire-item-control",
+                    "code": "check-box",
+                    "display": "Check Box"
+                  }
+                ]
+              }
+            },
+            {
+              "url" : "http://hl7.org/fhir/StructureDefinition/questionnaire-choiceOrientation",
+              "valueCode" : "horizontal"
+            }
+          ],
+          "answerOption": [
+            {
+              "valueCoding": {
+                "code": "AL",
+                "display": "Alabama"
+              }
+            },
+            {
+              "valueCoding": {
+                "code": "AK",
+                "display": "Alaska"
+              }
+            }
+          ]
+        },
+        {
+          "linkId": "6.2",
+          "text": "Has Patient been to American Samoa?",
+          "type": "boolean"
+        },
+        {
+          "linkId" : "6.3",
+          "text": "Patient has been to Alabama AND Alaska AND American Samoa",
+          "type": "display",
+          "enableWhen": [
+            {
+              "question" : "6.1",
+              "operator": "=",
+              "answerCoding": {
+                "code": "AL"
+              }
+            },
+            {
+              "question" : "6.1",
+              "operator": "=",
+              "answerCoding": {
+                "code": "AK"
+              }
+            },
+            {
+              "question": "6.2",
+              "operator": "=",
+              "answerBoolean": true
+            }
+          ],
+          "enableBehavior": "all"
+        },
+        {
+          "linkId" : "6.4",
+          "text": "Patient has been to Alabama OR Alaska OR American Samoa",
+          "type": "display",
+          "enableWhen": [
+            {
+              "question" : "6.1",
+              "operator": "=",
+              "answerCoding": {
+                "code": "AL"
+              }
+            },
+            {
+              "question" : "6.1",
+              "operator": "=",
+              "answerCoding": {
+                "code": "AK"
+              }
+            },
+            {
+              "question": "6.2",
+              "operator": "=",
+              "answerBoolean": true
+            }
+          ],
+          "enableBehavior": "any"
+        },
+        {
+          "linkId" : "6.5",
+          "text": "Patient has been to Alabama OR Alaska OR American Samoa",
+          "type": "display",
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-enableWhenExpression",
+              "valueExpression": {
+                "description": "Patient has been to Alabama OR Alaska OR American Samoa",
+                "language": "text/fhirpath",
+                "expression": "%resource.repeat(item).where(linkId='6.1').answer.value.code ='AK' or %resource.repeat(item).where(linkId='6.1').answer.value.code ='AL' or %resource.repeat(item).where(linkId='6.2').answer.value = true"
+              }
+            }
+          ]
+        }
+      ]
+    }
+
+  ]
+}

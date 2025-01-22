@@ -1,0 +1,87 @@
+{
+  "resourceType": "Questionnaire",
+  "extension": [
+    {
+      "extension" : [
+        {
+          "url" : "name",
+          "valueCoding" : {
+            "system" : "http://hl7.org/fhir/uv/sdc/CodeSystem/launchContext",
+            "code" : "person",
+            "display" : "Person"
+          }
+        },
+        {
+          "url" : "type",
+          "valueCode" : "Person"
+        },
+        {
+          "url" : "description",
+          "valueString" : "The person that is to be used to pre-populate the form"
+        }
+      ],
+      "url" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-launchContext"
+    }
+  ],
+  "item": [
+    {
+      "linkId": "1.2",
+      "text": "Date of Birth",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+            "valueExpression": {
+              "language": "text/fhirpath",
+              "expression": "'Provide '+ %person.name[0].family + ' ' + %person.name[0].given + \"'s\" + ' Date of birth'"
+            }
+          }
+        ]
+      },
+      "type": "date"
+    },
+    {
+      "extension" : [
+        {
+          "url" : "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-initialExpression",
+          "valueExpression" : {
+            "language" : "text/fhirpath",
+            "expression" : "%person.name[0].given"
+          }
+        }
+      ],
+      "linkId": "1.3",
+      "text": "Given Name",
+      "type": "string"
+    },
+    {
+      "linkId": "1.5",
+      "text": "Fake Initial Name",
+      "type": "string",
+      "initial": {
+        "valueString": "Fake"
+      }
+    },
+    {
+      "text": "A section that contains data describing an interest or worry about a health state or process that could possibly require attention, intervention, or management.",
+      "type": "display",
+      "linkId": "/75310-3-help",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "text": "Help-Button",
+            "coding": [
+              {
+                "code": "help",
+                "display": "Help-Button",
+                "system": "http://hl7.org/fhir/questionnaire-item-control"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+
+}

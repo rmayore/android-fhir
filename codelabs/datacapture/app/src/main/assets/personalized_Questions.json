@@ -1,0 +1,59 @@
+{
+  "resourceType": "Questionnaire",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/variable",
+      "valueExpression": {
+        "name": "patient-name",
+        "language": "text/fhirpath",
+        "expression": "%resource.descendants().where(linkId='1.1').answer.value"
+      }
+    }
+  ],
+  "item": [
+    {
+      "linkId": "1.1",
+      "text": "Name",
+      "type": "string",
+      "required": true
+    },
+    {
+      "linkId": "1.2",
+      "text": "Date of Birth",
+      "_text": {
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/cqf-expression",
+            "valueExpression": {
+              "language": "text/fhirpath",
+              "expression": "'Provide '+ %patient-name + \"'s\" + ' Date of birth'"
+            }
+          }
+        ]
+      },
+      "type": "date"
+    },
+    {
+      "text": "A section that contains data describing an interest or worry about a health state or process that could possibly require attention, intervention, or management.",
+      "type": "display",
+      "linkId": "/75310-3-help",
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+          "valueCodeableConcept": {
+            "text": "Help-Button",
+            "coding": [
+              {
+                "code": "help",
+                "display": "Help-Button",
+                "system": "http://hl7.org/fhir/questionnaire-item-control"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+  ]
+}
